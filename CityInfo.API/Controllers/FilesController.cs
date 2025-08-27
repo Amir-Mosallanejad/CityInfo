@@ -1,12 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace CityInfo.API.Controllers;
 
-[Route("api/files")]
+[Route("api/v{version:apiVersion}/files")] 
+//  [Authorize]
 [ApiController]
 public class FilesController : ControllerBase
 {
+
     private readonly FileExtensionContentTypeProvider _fileExtensionContentTypeProvider;
 
     public FilesController(
@@ -18,6 +24,7 @@ public class FilesController : ControllerBase
     }
 
     [HttpGet("{fileId}")]
+    [ApiVersion(0.1, Deprecated = true)]
     public ActionResult GetFile(string fileId)
     {
         string pathToFile = "read-me.txt";
@@ -38,6 +45,7 @@ public class FilesController : ControllerBase
     }
 
     [HttpPost]
+    [ApiVersion(1)]
     public async Task<ActionResult> CreateFile(IFormFile file)
     {
         // Validate the input. Put a limit on filesize to avoid large uploads attacks. 
