@@ -10,7 +10,7 @@ using CityInfo.API.Entities;
 namespace CityInfo.API.Controllers;
 
 [ApiController]
-// [Authorize]
+[Authorize]
 [Route("api/v{version:apiVersion}/cities")]
 [ApiVersion(1)]
 [ApiVersion(2)]
@@ -50,18 +50,18 @@ public class CitiesController : ControllerBase
     /// <summary>
     /// Get a city by id
     /// </summary>
-    /// <param name="id">The id of the city to get</param>
+    /// <param name="cityId">The id of the city to get</param>
     /// <param name="includePointsOfInterest">Whether or not to include the points of interest</param>
     /// <response code="200">Returns the requested city</response>
     /// <returns>A city with or without points of interest</returns>
-    [HttpGet("{id}")]
+    [HttpGet("{cityId}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCity(
-        int id, bool includePointsOfInterest = false)
+        int cityId, bool includePointsOfInterest = false)
     {
-        City? city = await _cityInfoRepository.GetCityAsync(id, includePointsOfInterest);
+        City? city = await _cityInfoRepository.GetCityAsync(cityId, includePointsOfInterest);
         if (city == null)
         {
             return NotFound();
