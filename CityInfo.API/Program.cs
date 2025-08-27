@@ -18,10 +18,10 @@ builder.Host.UseSerilog();
 // Add services to the container.
 
 builder.Services.AddControllers(options =>
-    {
-        options.ReturnHttpNotAcceptable = true;
-    }).AddNewtonsoftJson()
-    .AddXmlDataContractSerializerFormatters();
+{
+    options.ReturnHttpNotAcceptable = true;
+}).AddNewtonsoftJson()
+.AddXmlDataContractSerializerFormatters();
 
 builder.Services.AddProblemDetails();
 // https://aka.ms/aspnetcore/swashbuckle
@@ -39,6 +39,10 @@ builder.Services.AddSingleton<CitiesDataStore>();
 builder.Services.AddDbContext<CityInfoContext>(
     dbContextOptions => dbContextOptions.UseSqlite(
         builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
+
+builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 WebApplication app = builder.Build();
 
@@ -60,6 +64,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();
